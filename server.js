@@ -6,6 +6,8 @@ const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
 const posts = require("./routes/api/posts");
 
+const passport = require("passport");
+
 const app = express();
 
 //Body Parser Middleware
@@ -18,9 +20,13 @@ const db = require("./config/keys").mongoURI;
 mongoose
   .connect(db, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log("Error while Connecting to DB: " + err));
+  .catch((err) => console.log("Error while Connecting to DB: " + err));
 
-app.get("/", (req, res) => res.send("Hello World"));
+//Passport Middleware
+app.use(passport.initialize());
+
+//Passport Config
+require("./config/passport")(passport);
 
 //Use Routes
 app.use("/api/users", users);
